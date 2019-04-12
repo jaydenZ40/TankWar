@@ -19,11 +19,11 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - player
+  - bullet
+  - enemy
+  - enemybullet
+  - boundary
   - 
   - 
   - 

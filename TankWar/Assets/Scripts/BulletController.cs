@@ -5,16 +5,15 @@ using UnityEngine;
 public class BulletController : MonoBehaviour
 {
     public float bulletMoveSpeed = 10;
+    public static int damage = 1;
 
     private Vector3 bulletDirection;
-    private float damage = 1;
 
     void Start()
     {
-        bulletDirection = PlayerController.instance.transform.up;
+        bulletDirection = PlayerController.instance.lastNoneZeroDirection.normalized;
     }
 
-    // Update is called once per frame
     void Update()
     {
         transform.Translate(bulletDirection * Time.deltaTime * bulletMoveSpeed);
@@ -25,8 +24,8 @@ public class BulletController : MonoBehaviour
     }
     bool IsOutsideScreen()
     {
-        if (transform.position.x < -8.5 || transform.position.x > 8.5
-            || transform.position.y < -4.5 || transform.position.y > 4.5)
+        if (transform.position.x < -9 || transform.position.x > 9
+            || transform.position.y < -5 || transform.position.y > 5)   // screen size x = (-9, 9), y = (-5, 5)
         {
             return true;
         }

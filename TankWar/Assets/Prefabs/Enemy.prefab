@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4212193271580059796}
   - component: {fileID: 1235158700824767317}
   - component: {fileID: 5720720889310148725}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -115,9 +115,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4e85dec6a6438e45a97eed7e682c3e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shotInterval: 3
+  bulletDirection: {x: 0, y: 0, z: 0}
+  shootIntervalMin: 2
+  shootIntervalMax: 8
   enemyBullet: {fileID: 3538589025154000238, guid: 765e3d8e3e2552f448062066216a82a6,
     type: 3}
+  onShotEnemy:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  enemyHealth: 5
+  enemyMoveSpeed: 0.5
 --- !u!61 &5720720889310148725
 BoxCollider2D:
   m_ObjectHideFlags: 0
