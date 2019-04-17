@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PlayerController : MonoBehaviour
+public class Player2Controller : MonoBehaviour
 {
-    public static PlayerController instance;
+    public static Player2Controller instance;
     public GameObject bullet;
     public Rigidbody2D rb;
     public float moveSpeed = 5;
     public Vector3 moveDirection = Vector3.zero;
     public Vector3 lastNoneZeroDirection = new Vector3(1, 0, 0); // default bullet direction is right
-    public UnityEvent onShotPlayer1 = new UnityEvent();
-    public UnityEvent onCollisionWithEnemy1 = new UnityEvent();
-    public UnityEvent onRescuedPlayer2 = new UnityEvent();
+    public UnityEvent onShotPlayer2 = new UnityEvent();
+    public UnityEvent onCollisionWithEnemy2 = new UnityEvent();
+    public UnityEvent onRescuedPlayer1 = new UnityEvent();
     public bool isKnockedDown = false;
 
     private Vector3 oldPosition = Vector3.zero;
-    private float distanceToPlayer2;
+    private float distanceToPlayer1;
     private float timer = 0;
 
     void Awake()
@@ -27,19 +27,19 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
             rb.transform.position += Vector3.left * moveSpeed * Time.deltaTime;
         }
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.RightArrow))
         {
             rb.transform.position += Vector3.right * moveSpeed * Time.deltaTime;
         }
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.UpArrow))
         {
             rb.transform.position += Vector3.up * moveSpeed * Time.deltaTime;
         }
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.DownArrow))
         {
             rb.transform.position += Vector3.down * moveSpeed * Time.deltaTime;
         }
@@ -58,27 +58,27 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J) && !isKnockedDown)
+        if (Input.GetKeyDown(KeyCode.Keypad4) && !isKnockedDown)
         {
             Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
         }
 
-        distanceToPlayer2 = (rb.transform.position - Player2Controller.instance.transform.position).magnitude;
+        distanceToPlayer1 = (rb.transform.position - PlayerController.instance.transform.position).magnitude;
 
-        BulletController.damage = distanceToPlayer2 <= 5 ? 2 : 1;  // Power up when two player are close to each other
+        BulletController.damage = distanceToPlayer1 <= 5 ? 2 : 1;  // Power up when two player are close to each other
 
-        if (distanceToPlayer2 <= 1.5f && Input.GetKey(KeyCode.K) && Player2Controller.instance.isKnockedDown)
+        if (distanceToPlayer1 <= 1.5f && Input.GetKey(KeyCode.Keypad5) && PlayerController.instance.isKnockedDown)
         {
             timer += Time.deltaTime;
             if (timer >= 5)
             {
-                onRescuedPlayer2.Invoke();
+                onRescuedPlayer1.Invoke();
                 timer = 0;
             }
-            Debug.Log("Timer: " + timer + ", distance: " + distanceToPlayer2);
+            Debug.Log("Timer: " + timer + ", distance: " + distanceToPlayer1);
         }
 
-        //if (Input.GetKeyUp(KeyCode.K) || distanceToPlayer2 > 1.5f)    // need to hold the key until another player is recovered??
+        //if (Input.GetKeyUp(KeyCode.Keypad5) || distanceToPlayer1 > 1.5f)    // need to hold the key until another player is recovered??
         //{
         //    timer = 0;
         //}
@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour
         if (other.transform.CompareTag("Enemy") && !isKnockedDown)
         {
             Destroy(other.gameObject);
-            onCollisionWithEnemy1.Invoke();
+            onCollisionWithEnemy2.Invoke();
         }
     }
 
@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour
         if (other.transform.CompareTag("EnemyBullet") && !isKnockedDown)
         {
             Destroy(other.gameObject);
-            onShotPlayer1.Invoke();
+            onShotPlayer2.Invoke();
         }
     }
 }

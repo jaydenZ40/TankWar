@@ -11,7 +11,8 @@ public class BulletController : MonoBehaviour
 
     void Start()
     {
-        bulletDirection = PlayerController.instance.lastNoneZeroDirection.normalized;
+        bulletDirection = this.gameObject.name == "Bullet(Clone)" ? PlayerController.instance.lastNoneZeroDirection.normalized : Player2Controller.instance.lastNoneZeroDirection.normalized;
+        Debug.Log(this.gameObject.name);
     }
 
     void Update()

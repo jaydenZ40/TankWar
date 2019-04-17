@@ -8,10 +8,16 @@ public class EnemiesBullets : MonoBehaviour
     public static int damage = 5;
 
     private Vector3 bulletDirection;
+    private float distanceToPlayer1;
+    private float distanceToPlayer2;
 
     void Start()
     {
-        bulletDirection = (PlayerController.instance.transform.position - transform.position).normalized;
+        // enemy's bullet will be shot to the player who is closer to itself.
+        distanceToPlayer1 = (PlayerController.instance.transform.position - transform.position).magnitude;
+        distanceToPlayer2 = (Player2Controller.instance.transform.position - transform.position).magnitude;
+        bulletDirection = distanceToPlayer1 <= distanceToPlayer2 ?
+            (PlayerController.instance.transform.position - transform.position).normalized : (Player2Controller.instance.transform.position - transform.position).normalized;
     }
     void Update()
     {

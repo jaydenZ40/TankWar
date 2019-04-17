@@ -16,6 +16,8 @@ public class EnemiesController : MonoBehaviour
     public float enemyMoveSpeed = 0.5f;
 
     private float timer = 0;
+    private float distanceToPlayer1;
+    private float distanceToPlayer2;
 
     private void Awake()
     {
@@ -24,7 +26,12 @@ public class EnemiesController : MonoBehaviour
 
     void Update()
     {
-        bulletDirection = (PlayerController.instance.transform.position - transform.position).normalized;
+        // enemy will move forward the player who is closer to itself.
+        distanceToPlayer1 = (PlayerController.instance.transform.position - transform.position).magnitude;
+        distanceToPlayer2 = (Player2Controller.instance.transform.position - transform.position).magnitude;
+        bulletDirection = distanceToPlayer1 <= distanceToPlayer2 ? 
+            (PlayerController.instance.transform.position - transform.position).normalized : (Player2Controller.instance.transform.position - transform.position).normalized;
+
         timer += Time.deltaTime;
 
         if (timer > Random.Range(shootIntervalMin, shootIntervalMax))
