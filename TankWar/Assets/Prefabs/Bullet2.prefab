@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 7602851377879487230}
   - component: {fileID: 2097292376337829286}
   m_Layer: 9
-  m_Name: bullet
-  m_TagString: Bullet
+  m_Name: Bullet2
+  m_TagString: Bullet2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93,7 +93,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86131f31145cacc43a48a5e7b84d1110, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletMoveSpeed: 10
 --- !u!61 &2097292376337829286
 BoxCollider2D:
   m_ObjectHideFlags: 0

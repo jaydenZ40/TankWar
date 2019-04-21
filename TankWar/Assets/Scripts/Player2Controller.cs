@@ -8,6 +8,7 @@ public class Player2Controller : MonoBehaviour
     public static Player2Controller instance;
     public GameObject bullet;
     public Rigidbody2D rb;
+    public Collider2D collider;
     public float moveSpeed = 5;
     public Vector3 moveDirection = Vector3.zero;
     public Vector3 lastNoneZeroDirection = new Vector3(1, 0, 0); // default bullet direction is right
@@ -15,6 +16,8 @@ public class Player2Controller : MonoBehaviour
     public UnityEvent onCollisionWithEnemy2 = new UnityEvent();
     public UnityEvent onRescuedPlayer1 = new UnityEvent();
     public bool isKnockedDown = false;
+    public int damage = 1;
+    public float bulletMoveSpeed = 10;
 
     private Vector3 oldPosition = Vector3.zero;
     private float distanceToPlayer1;
@@ -65,7 +68,7 @@ public class Player2Controller : MonoBehaviour
 
         distanceToPlayer1 = (rb.transform.position - PlayerController.instance.transform.position).magnitude;
 
-        BulletController.damage = distanceToPlayer1 <= 5 ? 2 : 1;  // Power up when two player are close to each other
+        damage = distanceToPlayer1 <= 5 ? 2 : 1;  // Power up when two player are close to each other
 
         if (distanceToPlayer1 <= 1.5f && Input.GetKey(KeyCode.Keypad5) && PlayerController.instance.isKnockedDown)
         {

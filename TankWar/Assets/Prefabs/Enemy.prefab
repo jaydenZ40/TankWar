@@ -8,11 +8,12 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2984160727852772086}
+  - component: {fileID: 9037341447358619525}
   - component: {fileID: 1326312228567650734}
   - component: {fileID: 4212193271580059796}
   - component: {fileID: 1235158700824767317}
   - component: {fileID: 5720720889310148725}
+  - component: {fileID: 4427748132768845755}
   m_Layer: 10
   m_Name: Enemy
   m_TagString: Enemy
@@ -20,20 +21,25 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2984160727852772086
-Transform:
+--- !u!224 &9037341447358619525
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8128237841785738559}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.9605033, y: -0.74722856, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1, y: 1.0016667}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &1326312228567650734
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -153,3 +159,11 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1.0016667}
   m_EdgeRadius: 0
+--- !u!222 &4427748132768845755
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8128237841785738559}
+  m_CullTransparentMesh: 0

@@ -10,6 +10,9 @@ TagManager:
   - Weapon
   - Player2
   - Player1
+  - Bullet2
+  - Shield
+  - Heal
   layers:
   - Default
   - TransparentFX

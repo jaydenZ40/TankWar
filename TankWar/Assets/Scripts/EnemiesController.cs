@@ -8,8 +8,8 @@ public class EnemiesController : MonoBehaviour
     public static EnemiesController instance;
 
     public Vector3 bulletDirection;
-    public float shootIntervalMin = 10;
-    public float shootIntervalMax = 20;
+    public float shootIntervalMin = 5;
+    public float shootIntervalMax = 15;
     public GameObject enemyBullet;
     public UnityEvent onShotEnemy = new UnityEvent();
     public int enemyHealth = 5;
@@ -48,7 +48,19 @@ public class EnemiesController : MonoBehaviour
         if (other.transform.CompareTag("Bullet"))
         {
             Destroy(other.gameObject);
-            enemyHealth -= BulletController.damage;
+            enemyHealth -= PlayerController.instance.damage;
+            if (enemyHealth <= 0)
+            {
+                Destroy(this.gameObject);
+                GameManager.instance.DecNumOfEnemiesLeft();
+            }
+            onShotEnemy.Invoke();
+        }
+
+        if (other.transform.CompareTag("Bullet2"))
+        {
+            Destroy(other.gameObject);
+            enemyHealth -= Player2Controller.instance.damage;
             if (enemyHealth <= 0)
             {
                 Destroy(this.gameObject);

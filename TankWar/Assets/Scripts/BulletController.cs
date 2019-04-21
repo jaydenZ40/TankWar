@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
-    public float bulletMoveSpeed = 10;
-    public static int damage = 1;
-
+    private float bulletMoveSpeed;
     private Vector3 bulletDirection;
 
     void Start()
     {
         bulletDirection = this.gameObject.name == "Bullet(Clone)" ? PlayerController.instance.lastNoneZeroDirection.normalized : Player2Controller.instance.lastNoneZeroDirection.normalized;
+        bulletMoveSpeed = this.gameObject.name == "Bullet(Clone)" ? PlayerController.instance.bulletMoveSpeed: Player2Controller.instance.bulletMoveSpeed;
         Debug.Log(this.gameObject.name);
     }
 
