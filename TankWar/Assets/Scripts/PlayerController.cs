@@ -14,10 +14,13 @@ public class PlayerController : MonoBehaviour
     public Vector3 lastNoneZeroDirection = new Vector3(1, 0, 0); // default bullet direction is right
     public UnityEvent onShotPlayer1 = new UnityEvent();
     public UnityEvent onCollisionWithEnemy1 = new UnityEvent();
-    public UnityEvent onRescuedPlayer2 = new UnityEvent();
+    public UnityEvent onRescuedPlayer2 = new UnityEvent();    // save player2's life
+    public UnityEvent onHealPlayer1 = new UnityEvent();
+    public UnityEvent onShieldPlayer1 = new UnityEvent();
     public bool isKnockedDown = false;
     public int damage = 1;
-    public float bulletMoveSpeed = 10;
+    public int powerupDamage = 2;
+    public float bulletMoveSpeed = 5;
     public float distanceToPlayer2;
 
     private Vector3 oldPosition = Vector3.zero;
@@ -68,7 +71,7 @@ public class PlayerController : MonoBehaviour
 
         distanceToPlayer2 = (rb.transform.position - Player2Controller.instance.transform.position).magnitude;
 
-        damage = distanceToPlayer2 <= 5 ? 2 : 1;  // Power up when two player are close to each other
+        damage = distanceToPlayer2 <= 5 ? powerupDamage : damage;  // Power up when two player are close to each other
 
         if (distanceToPlayer2 <= 1.5f && Input.GetKey(KeyCode.K) && Player2Controller.instance.isKnockedDown)
         {
@@ -102,6 +105,18 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(other.gameObject);
             onShotPlayer1.Invoke();
+        }
+
+        if (other.transform.CompareTag("Heal"))
+        {
+            Destroy(other.gameObject);
+            onHealPlayer1.Invoke();
+        }
+
+        if (other.transform.CompareTag("Shield"))
+        {
+            Destroy(other.gameObject);
+            onShieldPlayer1.Invoke();
         }
     }
 }

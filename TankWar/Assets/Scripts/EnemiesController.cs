@@ -8,8 +8,8 @@ public class EnemiesController : MonoBehaviour
     public static EnemiesController instance;
 
     public Vector3 bulletDirection;
-    public float shootIntervalMin = 5;
-    public float shootIntervalMax = 15;
+    public float shootIntervalMin = 3;
+    public float shootIntervalMax = 10;
     public GameObject enemyBullet;
     public UnityEvent onShotEnemy = new UnityEvent();
     public int enemyHealth = 5;

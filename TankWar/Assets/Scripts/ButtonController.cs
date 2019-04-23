@@ -62,17 +62,19 @@ public class ButtonController : MonoBehaviour
 
     public void OnPlay()
     {
-        SceneManager.LoadScene("Level1");
+        SceneManager.LoadScene("ChooseCharacter");
     }
 
     public void OnPause()
     {
-        
+        Pause.instance.TogglePause();
     }
 
     public void OnRestart()
     {
+        player1 = 0; player2 = 0;
         SceneManager.LoadScene("ChooseCharacter");
+        Time.timeScale = 1;
     }
 
     public void OnExit()

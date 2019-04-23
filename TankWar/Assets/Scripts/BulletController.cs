@@ -11,7 +11,7 @@ public class BulletController : MonoBehaviour
     {
         bulletDirection = this.gameObject.name == "Bullet(Clone)" ? PlayerController.instance.lastNoneZeroDirection.normalized : Player2Controller.instance.lastNoneZeroDirection.normalized;
         bulletMoveSpeed = this.gameObject.name == "Bullet(Clone)" ? PlayerController.instance.bulletMoveSpeed: Player2Controller.instance.bulletMoveSpeed;
-        Debug.Log(this.gameObject.name);
+        //Debug.Log(this.gameObject.name);
     }
 
     void Update()
