@@ -18,10 +18,12 @@ public class EnemiesController : MonoBehaviour
     private float timer = 0;
     private float distanceToPlayer1;
     private float distanceToPlayer2;
+    private Rigidbody2D rb;
 
     private void Awake()
     {
         instance = this;
+        rb = transform.GetComponent<Rigidbody2D>();
     }
 
     void Update()

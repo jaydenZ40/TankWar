@@ -13,6 +13,7 @@ TagManager:
   - Bullet2
   - Shield
   - Heal
+  - Wall
   layers:
   - Default
   - TransparentFX

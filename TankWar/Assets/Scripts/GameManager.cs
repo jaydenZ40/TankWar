@@ -108,10 +108,10 @@ public class GameManager : MonoBehaviour
     void DrawLine()
     {
         float distance = PlayerController.instance.distanceToPlayer2;
-        float scaleY;
-        if (distance > 2)
-            scaleY = 100 / distance + 5;
-        else scaleY = 50;
+        //float scaleY;
+        //if (distance > 2)
+        //    scaleY = 50 / distance + 5;
+        //else scaleY = 25;
 
         Vector3 P1 = PlayerController.instance.transform.position;
         Vector3 P2 = Player2Controller.instance.transform.position;
@@ -120,14 +120,15 @@ public class GameManager : MonoBehaviour
 
         float rotateZ = Mathf.Atan(deltaY / deltaX);
         line.transform.rotation = Quaternion.AxisAngle(new Vector3(0, 0, 1), rotateZ);
-        line.transform.localScale = new Vector3(distance, scaleY, 1);
+        line.transform.localScale = new Vector3(distance, 5, 1);
         line.transform.position = (P2 + P1) / 2;
 
         //Debug.Log(distance);
         //Debug.Log(line.GetComponent<SpriteRenderer>().color.a);
         if (distance > 5)
-            line.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0, 0);
-        else line.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0, 255 - 51 * distance);
+            line.GetComponent<SpriteRenderer>().color = new Color(255, 255, 0, 0);
+        else line.GetComponent<SpriteRenderer>().color = new Color(255, 255 / distance, 0, 255 - 51 * distance);
+        //Debug.Log(line.GetComponent<SpriteRenderer>().color);
     }
 
     void Player1CollidesEnemy()
