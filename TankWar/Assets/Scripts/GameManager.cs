@@ -12,18 +12,24 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI health2;
     public TextMeshProUGUI shield1;
     public TextMeshProUGUI shield2;
+    public TextMeshProUGUI rescueTime;
     public GameObject Enemy;
     public GameObject line;
     public GameObject Heal;
     public GameObject Shield;
     public GameObject Bullet;
     public GameObject Bullet2;
+    public Sprite tank1, tank2;
+    public GameObject player1, player2;
+    public Sprite tank1Down, tank2Down;
 
     private int waveNum = 1;
     [SerializeField] private int NumOfEnemiesLeft = 0;
     [SerializeField] private int NumOfEnemiesWillSpawn = 10;
     private int PlayerHealth1 = 100;
     private int PlayerHealth2 = 100;
+    private int PlayerMaxHealth1 = 100;
+    private int PlayerMaxHealth2 = 100;
     private int PlayerShield1 = 0;
     private int PlayerShield2 = 0;
     private float timer = 0;
@@ -52,8 +58,19 @@ public class GameManager : MonoBehaviour
         Player2Controller.instance.onHealPlayer2.AddListener(AddPlayer2Health);
         Player2Controller.instance.onShieldPlayer2.AddListener(AddPlayer2Shield);
 
+        //EnemiesController.instance.onShotEnemy.AddListener(RandomSpawnHealthOrShield);
+
         tmpColor = PlayerController.instance.GetComponent<SpriteRenderer>().color;
         tmpColor2 = Player2Controller.instance.GetComponent<SpriteRenderer>().color;
+
+        if (ButtonController.weaponType1 == 2)
+        {
+            player1.GetComponent<SpriteRenderer>().sprite = tank2;
+        }
+        if (ButtonController.weaponType2 == 2)
+        {
+            player2.GetComponent<SpriteRenderer>().sprite = tank2;
+        }
 
         //Debug.Log("P1:" + ButtonController.player1 + ", P2:" + ButtonController.player2);
     }
@@ -62,7 +79,7 @@ public class GameManager : MonoBehaviour
     {
         SpawnEnemies();
 
-        NextWave(); // Generate heal and shield after each wave, add difficulty;
+        NextWave();
 
         CheckWin();
 
@@ -89,9 +106,6 @@ public class GameManager : MonoBehaviour
             waveNum++;
             waveText.text = "Wave: " + waveNum;
             NumOfEnemiesWillSpawn += 10 + (waveNum - 1) * 5;
-
-            Instantiate(Heal, new Vector3(Random.Range(-9, 9), Random.Range(-5, 5), 0), Quaternion.identity);
-            Instantiate(Shield, new Vector3(Random.Range(-9, 9), Random.Range(-5, 5), 0), Quaternion.identity);
 
             EnemiesController.instance.enemyMoveSpeed += 0.3f;
         }
@@ -133,7 +147,7 @@ public class GameManager : MonoBehaviour
 
     void Player1CollidesEnemy()
     {
-        PlayerShield1 -= 50;
+        PlayerShield1 -= 25;
         if (PlayerShield1 < 0)
         {
             PlayerHealth1 += PlayerShield1;
@@ -146,6 +160,11 @@ public class GameManager : MonoBehaviour
             PlayerController.instance.isKnockedDown = true;
             PlayerController.instance.moveSpeed = 1;
             CheckGameover();
+            if (ButtonController.weaponType1 == 1)
+            {
+                player1.GetComponent<SpriteRenderer>().sprite = tank1Down;
+            }
+            else player1.GetComponent<SpriteRenderer>().sprite = tank2Down;
         }
         health1.text = "Health: " + PlayerHealth1;
         shield1.text = "Shield: " + PlayerShield1;
@@ -165,6 +184,12 @@ public class GameManager : MonoBehaviour
             PlayerController.instance.isKnockedDown = true;
             PlayerController.instance.moveSpeed = 1;
             CheckGameover();
+
+            if (ButtonController.weaponType1 == 1)
+            {
+                player1.GetComponent<SpriteRenderer>().sprite = tank1Down;
+            }
+            else player1.GetComponent<SpriteRenderer>().sprite = tank2Down;
         }
         health1.text = "Health: " + PlayerHealth1;
         shield1.text = "Shield: " + PlayerShield1;
@@ -172,7 +197,7 @@ public class GameManager : MonoBehaviour
 
     void Player2CollidesEnemy()
     {
-        PlayerShield2 -= 50;
+        PlayerShield2 -= 25;
         if (PlayerShield2 < 0)
         {
             PlayerHealth2 += PlayerShield2;
@@ -185,6 +210,11 @@ public class GameManager : MonoBehaviour
             Player2Controller.instance.isKnockedDown = true;
             Player2Controller.instance.moveSpeed = 1;
             CheckGameover();
+            if (ButtonController.weaponType2 == 1)
+            {
+                player2.GetComponent<SpriteRenderer>().sprite = tank1Down;
+            }
+            else player2.GetComponent<SpriteRenderer>().sprite = tank2Down;
         }
         health2.text = "Health: " + PlayerHealth2;
         shield2.text = "Shield: " + PlayerShield2;
@@ -204,6 +234,11 @@ public class GameManager : MonoBehaviour
             Player2Controller.instance.isKnockedDown = true;
             Player2Controller.instance.moveSpeed = 1;
             CheckGameover();
+            if (ButtonController.weaponType2 == 1)
+            {
+                player2.GetComponent<SpriteRenderer>().sprite = tank1Down;
+            }
+            else player2.GetComponent<SpriteRenderer>().sprite = tank2Down;
         }
         health2.text = "Health: " + PlayerHealth2;
         shield2.text = "Shield: " + PlayerShield2;
@@ -227,7 +262,9 @@ public class GameManager : MonoBehaviour
         PlayerController.instance.isKnockedDown = false;
         PlayerController.instance.moveSpeed = 5;
         Invoke("SetColliderActive", 3); // invincible for 3 sec after being saved
-
+        if (ButtonController.weaponType1 == 1)
+            player1.GetComponent<SpriteRenderer>().sprite = tank1;
+        else player1.GetComponent<SpriteRenderer>().sprite = tank2;
     }
 
     void Player2Recover()
@@ -239,6 +276,9 @@ public class GameManager : MonoBehaviour
         Player2Controller.instance.isKnockedDown = false;
         Player2Controller.instance.moveSpeed = 5;
         Invoke("SetColliderActive", 3); // invincible for 3 sec after being saved
+        if (ButtonController.weaponType2 == 1)
+            player2.GetComponent<SpriteRenderer>().sprite = tank1;
+        else player2.GetComponent<SpriteRenderer>().sprite = tank2;
     }
 
     void SetColliderActive()
@@ -252,6 +292,8 @@ public class GameManager : MonoBehaviour
     void AddPlayer1Health()
     {
         PlayerHealth1 += 30;
+        if (PlayerHealth1 >= PlayerMaxHealth1)
+            PlayerHealth1 = PlayerMaxHealth1;
         health1.text = "Health: " + PlayerHealth1;
     }
 
@@ -264,6 +306,8 @@ public class GameManager : MonoBehaviour
     void AddPlayer2Health()
     {
         PlayerHealth2 += 30;
+        if (PlayerHealth1 >= PlayerMaxHealth2)
+            PlayerHealth1 = PlayerMaxHealth2;
         health2.text = "Health: " + PlayerHealth2;
     }
 
@@ -273,6 +317,16 @@ public class GameManager : MonoBehaviour
         shield2.text = "Shield: " + PlayerShield2;
     }
 
+    //void RandomSpawnHealthOrShield(Vector3 pos)
+    //{
+    //    //if (Random.Range(0, 10) == 0)
+    //    if (true)
+    //    {
+    //        if (Random.Range(0, 2) == 0)
+    //            Instantiate(Heal, pos, Quaternion.identity);
+    //        else Instantiate(Shield, pos, Quaternion.identity);
+    //    }
+    //}
 
     Vector3 GetEnemyRandomSpawnPosition()
     {
@@ -298,6 +352,7 @@ public class GameManager : MonoBehaviour
         switch (ButtonController.player1)
         {
             case 1:
+                PlayerMaxHealth1 = 100;
                 PlayerHealth1 = 100;
                 health1.text = "Health: 100";
                 PlayerController.instance.damage = 1;
@@ -307,6 +362,7 @@ public class GameManager : MonoBehaviour
                 PlayerController.instance.bulletMoveSpeed = 5;
                 break;
             case 2:
+                PlayerMaxHealth1 = 50;
                 PlayerHealth1 = 50;
                 health1.text = "Health: 50";
                 PlayerController.instance.damage = 2;
@@ -316,6 +372,7 @@ public class GameManager : MonoBehaviour
                 PlayerController.instance.bulletMoveSpeed = 15;
                 break;
             case 3:
+                PlayerMaxHealth1 = 75;
                 PlayerHealth1 = 75;
                 health1.text = "Health: 75";
                 PlayerController.instance.damage = 1;
@@ -325,6 +382,7 @@ public class GameManager : MonoBehaviour
                 PlayerController.instance.bulletMoveSpeed = 10;
                 break;
             case 4:
+                PlayerMaxHealth1 = 200;
                 PlayerHealth1 = 200;
                 health1.text = "Health: 200";
                 PlayerController.instance.damage = 1;
@@ -338,6 +396,7 @@ public class GameManager : MonoBehaviour
         switch (ButtonController.player2)
         {
             case 1:
+                PlayerMaxHealth2 = 100;
                 PlayerHealth2 = 100;
                 health2.text = "Health: 100";
                 Player2Controller.instance.damage = 1;
@@ -347,6 +406,7 @@ public class GameManager : MonoBehaviour
                 Player2Controller.instance.bulletMoveSpeed = 5;
                 break;
             case 2:
+                PlayerMaxHealth2 = 50;
                 PlayerHealth2 = 50;
                 health2.text = "Health: 50";
                 Player2Controller.instance.damage = 2;
@@ -356,6 +416,7 @@ public class GameManager : MonoBehaviour
                 Player2Controller.instance.bulletMoveSpeed = 15;
                 break;
             case 3:
+                PlayerMaxHealth2 = 75;
                 PlayerHealth2 = 75;
                 health2.text = "Health: 75";
                 Player2Controller.instance.damage = 1;
@@ -365,6 +426,7 @@ public class GameManager : MonoBehaviour
                 Player2Controller.instance.bulletMoveSpeed = 10;
                 break;
             case 4:
+                PlayerMaxHealth2 = 200;
                 PlayerHealth2 = 200;
                 health2.text = "Health: 200";
                 Player2Controller.instance.damage = 1;

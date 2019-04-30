@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance;
     public GameObject bullet;
+    public GameObject bulletUp;
+    public GameObject bulletDown;
     public Rigidbody2D rb;
     public Collider2D collider;
     public float moveSpeed = 5;
@@ -22,9 +25,11 @@ public class PlayerController : MonoBehaviour
     public int powerupDamage = 2;
     public float bulletMoveSpeed = 5;
     public float distanceToPlayer2;
+    public TextMeshProUGUI rescueTime;
 
     private Vector3 oldPosition = Vector3.zero;
     private float timer = 0;
+    private int bulletNum = 0;
 
     void Awake()
     {
@@ -66,28 +71,45 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.J) && !isKnockedDown)
         {
-            Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
+            if (ButtonController.weaponType1 != 2)
+                Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
+            else
+            {
+                Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
+                Instantiate(bulletUp, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
+                Instantiate(bulletDown, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
+            }
+            bulletNum++;
+            Invoke("ShotReady", 3);
         }
 
         distanceToPlayer2 = (rb.transform.position - Player2Controller.instance.transform.position).magnitude;
 
         damage = distanceToPlayer2 <= 5 ? powerupDamage : damage;  // Power up when two player are close to each other
+        bullet.GetComponent<SpriteRenderer>().color = distanceToPlayer2 <= 5 ? new Color(255, 0, 0) : new Color(255, 255, 255);
 
         if (distanceToPlayer2 <= 1.5f && Input.GetKey(KeyCode.K) && Player2Controller.instance.isKnockedDown)
         {
             timer += Time.deltaTime;
-            if (timer >= 5)
+            rescueTime.gameObject.SetActive(true);
+            rescueTime.text = (3 - (int)timer) + "sec";
+            Debug.Log("Timer: " + timer + ", distance: " + distanceToPlayer2);
+            if (timer >= 3)
             {
                 onRescuedPlayer2.Invoke();
                 timer = 0;
+                rescueTime.gameObject.SetActive(false);
             }
-            Debug.Log("Timer: " + timer + ", distance: " + distanceToPlayer2);
         }
 
         //if (Input.GetKeyUp(KeyCode.K) || distanceToPlayer2 > 1.5f)    // need to hold the key until another player is recovered??
         //{
         //    timer = 0;
         //}
+    }
+    void ShotReady()
+    {
+        bulletNum = 0;
     }
 
     private void OnCollisionEnter2D(Collision2D other)

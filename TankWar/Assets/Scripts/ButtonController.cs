@@ -7,6 +7,8 @@ public class ButtonController : MonoBehaviour
 {
     public static int player1 = 0;
     public static int player2 = 0;
+    public static int weaponType1 = 0;
+    public static int weaponType2 = 0;
 
     public void OnCharacter1()
     {
@@ -17,7 +19,7 @@ public class ButtonController : MonoBehaviour
         else
         {
             player2 = 1;
-            SceneManager.LoadScene("Level1");
+            SceneManager.LoadScene("ChooseWeapons");
         }
     }
 
@@ -30,7 +32,7 @@ public class ButtonController : MonoBehaviour
         else
         {
             player2 = 2;
-            SceneManager.LoadScene("Level1");
+            SceneManager.LoadScene("ChooseWeapons");
         }
     }
 
@@ -43,7 +45,7 @@ public class ButtonController : MonoBehaviour
         else
         {
             player2 = 3;
-            SceneManager.LoadScene("Level1");
+            SceneManager.LoadScene("ChooseWeapons");
         }
     }
 
@@ -56,7 +58,7 @@ public class ButtonController : MonoBehaviour
         else
         {
             player2 = 4;
-            SceneManager.LoadScene("Level1");
+            SceneManager.LoadScene("ChooseWeapons");
         }
     }
 
@@ -80,5 +82,25 @@ public class ButtonController : MonoBehaviour
     public void OnExit()
     {
         Application.Quit();
+    }
+    public void OnMachineGun()
+    {
+        if (weaponType1 == 0)
+            weaponType1 = 1;
+        else
+        {
+            weaponType2 = 1;
+            SceneManager.LoadScene("Level1");
+        }
+    }
+    public void OnShotGun()
+    {
+        if (weaponType1 == 0)
+            weaponType1 = 2;
+        else
+        {
+            weaponType2 = 2;
+            SceneManager.LoadScene("Level1");
+        }
     }
 }
