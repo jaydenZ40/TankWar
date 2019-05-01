@@ -29,6 +29,7 @@ public class Player2Controller : MonoBehaviour
     private float distanceToPlayer1;
     private float timer = 0;
     private int bulletNum = 0;
+    private int overheatBulletLimit = 10;
 
     void Awake()
     {
@@ -69,31 +70,26 @@ public class Player2Controller : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Keypad4) && !isKnockedDown && bulletNum < 5)
+        overheatBulletLimit = ButtonController.weaponType2 == 1 ? 10 : 5;
+
+        if (Input.GetKeyDown(KeyCode.Keypad4) && !isKnockedDown && bulletNum < overheatBulletLimit)
         {            
             //Debug.Log("1: " + ButtonController.weaponType1 + ", 2: " + ButtonController.weaponType2);
             if (ButtonController.weaponType2 != 2)
                 Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
             else
             {
-                var numShots = 3;
-                var spreadAngle = 2.0f;
-                var qAngle = Quaternion.AngleAxis((float)(-(numShots) / 2.0 * spreadAngle), transform.up) * transform.rotation;
-                var qDelta = Quaternion.AngleAxis(spreadAngle, transform.up);
-
-                for (var i = 0; i < numShots; i++)
-                {
-                    GameObject go = Instantiate(bullet, transform.position, qAngle);
-                    go.GetComponent<Rigidbody2D>().AddForce(go.transform.forward * 1000);
-                    qAngle = qDelta * qAngle;
-                }
+                Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
+                Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.AxisAngle(new Vector3(0, 0, 1), 0.1f));
+                Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.AxisAngle(new Vector3(0, 0, 1), -0.1f));
             }
             bulletNum++;
-            Invoke("ShotReady", 3);
         }
-        else if (bulletNum >= 5)
+        if (Input.GetKeyDown(KeyCode.Keypad4) && !isKnockedDown && bulletNum == overheatBulletLimit)
         {
+            bulletNum++;
             overheat.gameObject.SetActive(true);
+            Invoke("ShotReady", 3);
         }
 
         distanceToPlayer1 = (rb.transform.position - PlayerController.instance.transform.position).magnitude;

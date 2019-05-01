@@ -16,7 +16,6 @@ public class BulletController : MonoBehaviour
 
     void Update()
     {
-
         transform.Translate(bulletDirection * Time.deltaTime * bulletMoveSpeed);
         if (IsOutsideScreen())
         {

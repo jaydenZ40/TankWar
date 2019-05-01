@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 oldPosition = Vector3.zero;
     private float timer = 0;
     private int bulletNum = 0;
+    private int overheatBulletLimit = 10;
 
     void Awake()
     {
@@ -69,30 +70,25 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J) && !isKnockedDown && bulletNum < 5)
+        overheatBulletLimit = ButtonController.weaponType1 == 1 ? 10 : 5;
+
+        if (Input.GetKeyDown(KeyCode.J) && !isKnockedDown && bulletNum < overheatBulletLimit)
         {
             if (ButtonController.weaponType1 != 2)
                 Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
             else
             {
-                var numShots = 3;
-                var spreadAngle = 2.0f;
-                var qAngle = Quaternion.AngleAxis((float)(-(numShots) / 2.0 * spreadAngle), transform.up) * transform.rotation;
-                var qDelta = Quaternion.AngleAxis(spreadAngle, transform.up);
-
-                for (var i = 0; i < numShots; i++)
-                {
-                    GameObject go = Instantiate(bullet, transform.position, qAngle);
-                    go.GetComponent<Rigidbody2D>().AddForce(go.transform.forward * 1000);
-                    qAngle = qDelta * qAngle;
-                }
+                Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
+                Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.AxisAngle(new Vector3(0, 0, 1), 0.1f));
+                Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.AxisAngle(new Vector3(0, 0, 1), -0.1f));
             }
             bulletNum++;
-            Invoke("ShotReady", 3);
         }
-        else if (bulletNum >= 5)
+        if (Input.GetKeyDown(KeyCode.J) && !isKnockedDown && bulletNum == overheatBulletLimit)
         {
+            bulletNum++;
             overheat.gameObject.SetActive(true);
+            Invoke("ShotReady", 3);
         }
 
         distanceToPlayer2 = (rb.transform.position - Player2Controller.instance.transform.position).magnitude;
