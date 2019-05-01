@@ -20,7 +20,7 @@ public class EnemiesController : MonoBehaviour
     private float distanceToPlayer2;
     private Rigidbody2D rb;
 
-    private void Awake()
+    void Awake()
     {
         instance = this;
         rb = transform.GetComponent<Rigidbody2D>();
@@ -55,8 +55,8 @@ public class EnemiesController : MonoBehaviour
             {
                 Destroy(this.gameObject);
                 GameManager.instance.DecNumOfEnemiesLeft();
+                GameManager.instance.RandomSpawnHealthOrShield(transform.position);
             }
-            onShotEnemy.Invoke();
         }
 
         if (other.transform.CompareTag("Bullet2"))
@@ -67,8 +67,8 @@ public class EnemiesController : MonoBehaviour
             {
                 Destroy(this.gameObject);
                 GameManager.instance.DecNumOfEnemiesLeft();
+                GameManager.instance.RandomSpawnHealthOrShield(transform.position);
             }
-            onShotEnemy.Invoke();
         }
     }
 }

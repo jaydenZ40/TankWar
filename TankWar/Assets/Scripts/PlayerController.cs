@@ -8,8 +8,6 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance;
     public GameObject bullet;
-    public GameObject bulletUp;
-    public GameObject bulletDown;
     public Rigidbody2D rb;
     public Collider2D collider;
     public float moveSpeed = 5;
@@ -26,6 +24,7 @@ public class PlayerController : MonoBehaviour
     public float bulletMoveSpeed = 5;
     public float distanceToPlayer2;
     public TextMeshProUGUI rescueTime;
+    public TextMeshProUGUI overheat;
 
     private Vector3 oldPosition = Vector3.zero;
     private float timer = 0;
@@ -54,13 +53,14 @@ public class PlayerController : MonoBehaviour
         {
             rb.transform.position += Vector3.down * moveSpeed * Time.deltaTime;
         }
-        moveDirection = rb.transform.position - oldPosition;
-        oldPosition = rb.transform.position;
+       
         if (moveDirection != Vector3.zero)
         {
             float angle = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }
+        moveDirection = rb.transform.position - oldPosition;
+        oldPosition = rb.transform.position;
 
         if (moveDirection != Vector3.zero)
         {
@@ -69,18 +69,30 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J) && !isKnockedDown)
+        if (Input.GetKeyDown(KeyCode.J) && !isKnockedDown && bulletNum < 5)
         {
             if (ButtonController.weaponType1 != 2)
                 Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
             else
             {
-                Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
-                Instantiate(bulletUp, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
-                Instantiate(bulletDown, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
+                var numShots = 3;
+                var spreadAngle = 2.0f;
+                var qAngle = Quaternion.AngleAxis((float)(-(numShots) / 2.0 * spreadAngle), transform.up) * transform.rotation;
+                var qDelta = Quaternion.AngleAxis(spreadAngle, transform.up);
+
+                for (var i = 0; i < numShots; i++)
+                {
+                    GameObject go = Instantiate(bullet, transform.position, qAngle);
+                    go.GetComponent<Rigidbody2D>().AddForce(go.transform.forward * 1000);
+                    qAngle = qDelta * qAngle;
+                }
             }
             bulletNum++;
             Invoke("ShotReady", 3);
+        }
+        else if (bulletNum >= 5)
+        {
+            overheat.gameObject.SetActive(true);
         }
 
         distanceToPlayer2 = (rb.transform.position - Player2Controller.instance.transform.position).magnitude;
@@ -110,6 +122,7 @@ public class PlayerController : MonoBehaviour
     void ShotReady()
     {
         bulletNum = 0;
+        overheat.gameObject.SetActive(false);
     }
 
     private void OnCollisionEnter2D(Collision2D other)

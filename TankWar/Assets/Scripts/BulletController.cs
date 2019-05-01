@@ -25,8 +25,8 @@ public class BulletController : MonoBehaviour
     }
     bool IsOutsideScreen()
     {
-        if (transform.position.x < -9 || transform.position.x > 9
-            || transform.position.y < -5 || transform.position.y > 5)   // screen size x = (-9, 9), y = (-5, 5)
+        if (transform.position.x < -18 || transform.position.x > 18
+            || transform.position.y < -10 || transform.position.y > 10)   // screen size x = (-18, 18), y = (-10, 10)
         {
             return true;
         }

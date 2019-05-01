@@ -31,8 +31,8 @@ public class EnemiesBulletsUp : MonoBehaviour
 
     bool IsOutsideRange()   // the bullet will be destroyed if it is outside the enemies spawning range
     {
-        if (transform.position.x < -16 || transform.position.x > 16 
-            || transform.position.y < -11 || transform.position.y > 11)
+        if (transform.position.x < -24 || transform.position.x > 24
+            || transform.position.y < -16 || transform.position.y > 16)
         {
             return true;
         }

@@ -126,8 +126,11 @@ MonoBehaviour:
   shootIntervalMax: 10
   enemyBullet: {fileID: 3538589025154000238, guid: 765e3d8e3e2552f448062066216a82a6,
     type: 3}
-  Heal: {fileID: 974424401662913245, guid: 24e52bd245ae42446a3f8a800bd81ada, type: 3}
-  Shield: {fileID: 1894700651788896664, guid: aa88a6c84a26d2e4894eed1d8edc47ba, type: 3}
+  onShotEnemy:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   enemyHealth: 5
   enemyMoveSpeed: 0.5
 --- !u!61 &5720720889310148725

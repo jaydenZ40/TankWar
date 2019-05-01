@@ -58,8 +58,6 @@ public class GameManager : MonoBehaviour
         Player2Controller.instance.onHealPlayer2.AddListener(AddPlayer2Health);
         Player2Controller.instance.onShieldPlayer2.AddListener(AddPlayer2Shield);
 
-        //EnemiesController.instance.onShotEnemy.AddListener(RandomSpawnHealthOrShield);
-
         tmpColor = PlayerController.instance.GetComponent<SpriteRenderer>().color;
         tmpColor2 = Player2Controller.instance.GetComponent<SpriteRenderer>().color;
 
@@ -88,7 +86,6 @@ public class GameManager : MonoBehaviour
 
     void SpawnEnemies()
     {
-
         timer += Time.deltaTime;
         if (timer > Random.Range(2, 10) && NumOfEnemiesWillSpawn > 0)   // spawn enemies
         {
@@ -317,25 +314,26 @@ public class GameManager : MonoBehaviour
         shield2.text = "Shield: " + PlayerShield2;
     }
 
-    //void RandomSpawnHealthOrShield(Vector3 pos)
-    //{
-    //    //if (Random.Range(0, 10) == 0)
-    //    if (true)
-    //    {
-    //        if (Random.Range(0, 2) == 0)
-    //            Instantiate(Heal, pos, Quaternion.identity);
-    //        else Instantiate(Shield, pos, Quaternion.identity);
-    //    }
-    //}
+    public void RandomSpawnHealthOrShield(Vector3 pos)
+    {
+        int i = Random.Range(0, 8);
+        Debug.Log(i);
+        if (i == 5)
+        {
+            if (Random.Range(0, 2) == 1)
+                Instantiate(Heal, pos, Quaternion.identity);
+            else Instantiate(Shield, pos, Quaternion.identity);
+        }
+    }
 
-    Vector3 GetEnemyRandomSpawnPosition()
+    Vector3 GetEnemyRandomSpawnPosition()   //  spwan outside the screen but should not be far from players
     {
         Vector3 randomPosition = Vector3.zero;
         float x= 0, y = 0;
-        while ((x > -10 && x < 10) && (y > -6 && y < 6))
+        while ((x > -19 && x < 19) && (y > -11 && y < 11))
         {
-            x = Random.Range(-15, 15);
-            y = Random.Range(-10, 10);
+            x = Random.Range(-24, 24);
+            y = Random.Range(-16, 16);
         }
         randomPosition.x = x;
         randomPosition.y = y;
@@ -357,9 +355,7 @@ public class GameManager : MonoBehaviour
                 health1.text = "Health: 100";
                 PlayerController.instance.damage = 1;
                 PlayerController.instance.powerupDamage = 2;
-                Bullet.transform.localScale = new Vector3(0.2f, 0.2f, 0);
                 PlayerController.instance.moveSpeed = 3;
-                PlayerController.instance.bulletMoveSpeed = 5;
                 break;
             case 2:
                 PlayerMaxHealth1 = 50;
@@ -367,9 +363,7 @@ public class GameManager : MonoBehaviour
                 health1.text = "Health: 50";
                 PlayerController.instance.damage = 2;
                 PlayerController.instance.powerupDamage = 3;
-                Bullet.transform.localScale = new Vector3(0.5f, 0.5f, 0);
                 PlayerController.instance.moveSpeed = 3;
-                PlayerController.instance.bulletMoveSpeed = 15;
                 break;
             case 3:
                 PlayerMaxHealth1 = 75;
@@ -377,9 +371,7 @@ public class GameManager : MonoBehaviour
                 health1.text = "Health: 75";
                 PlayerController.instance.damage = 1;
                 PlayerController.instance.powerupDamage = 2;
-                Bullet.transform.localScale = new Vector3(0.2f, 0.2f, 0);
-                PlayerController.instance.moveSpeed = 10;
-                PlayerController.instance.bulletMoveSpeed = 10;
+                PlayerController.instance.moveSpeed = 7;
                 break;
             case 4:
                 PlayerMaxHealth1 = 200;
@@ -387,9 +379,7 @@ public class GameManager : MonoBehaviour
                 health1.text = "Health: 200";
                 PlayerController.instance.damage = 1;
                 PlayerController.instance.powerupDamage = 2;
-                Bullet.transform.localScale = new Vector3(0.2f, 0.2f, 0);
                 PlayerController.instance.moveSpeed = 1.5f;
-                PlayerController.instance.bulletMoveSpeed = 5;
                 break;
         }
 
@@ -401,9 +391,7 @@ public class GameManager : MonoBehaviour
                 health2.text = "Health: 100";
                 Player2Controller.instance.damage = 1;
                 Player2Controller.instance.powerupDamage = 2;
-                Bullet2.transform.localScale = new Vector3(0.2f, 0.2f, 0);
                 Player2Controller.instance.moveSpeed = 3;
-                Player2Controller.instance.bulletMoveSpeed = 5;
                 break;
             case 2:
                 PlayerMaxHealth2 = 50;
@@ -411,9 +399,7 @@ public class GameManager : MonoBehaviour
                 health2.text = "Health: 50";
                 Player2Controller.instance.damage = 2;
                 Player2Controller.instance.powerupDamage = 3;
-                Bullet2.transform.localScale = new Vector3(0.5f, 0.5f, 0);
                 Player2Controller.instance.moveSpeed = 3;
-                Player2Controller.instance.bulletMoveSpeed = 15;
                 break;
             case 3:
                 PlayerMaxHealth2 = 75;
@@ -421,9 +407,7 @@ public class GameManager : MonoBehaviour
                 health2.text = "Health: 75";
                 Player2Controller.instance.damage = 1;
                 Player2Controller.instance.powerupDamage = 2;
-                Bullet2.transform.localScale = new Vector3(0.2f, 0.2f, 0);
-                Player2Controller.instance.moveSpeed = 10;
-                Player2Controller.instance.bulletMoveSpeed = 10;
+                Player2Controller.instance.moveSpeed = 7;
                 break;
             case 4:
                 PlayerMaxHealth2 = 200;
@@ -431,9 +415,9 @@ public class GameManager : MonoBehaviour
                 health2.text = "Health: 200";
                 Player2Controller.instance.damage = 1;
                 Player2Controller.instance.powerupDamage = 2;
-                Bullet2.transform.localScale = new Vector3(0.2f, 0.2f, 0);
+                //Bullet2.transform.localScale = new Vector3(0.2f, 0.2f, 0);
                 Player2Controller.instance.moveSpeed = 1.5f;
-                Player2Controller.instance.bulletMoveSpeed = 5;
+                //Player2Controller.instance.bulletMoveSpeed = 5;
                 break;
         }
     }
