@@ -2,13 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class ButtonController : MonoBehaviour
 {
+    public static ButtonController instance;
     public static int player1 = 0;
     public static int player2 = 0;
     public static int weaponType1 = 0;
     public static int weaponType2 = 0;
+    public UnityEvent onButtons = new UnityEvent();
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     public void OnCharacter1()
     {
@@ -21,6 +29,7 @@ public class ButtonController : MonoBehaviour
             player2 = 1;
             SceneManager.LoadScene("ChooseWeapons");
         }
+        onButtons.Invoke();
     }
 
     public void OnCharacter2()
@@ -34,6 +43,7 @@ public class ButtonController : MonoBehaviour
             player2 = 2;
             SceneManager.LoadScene("ChooseWeapons");
         }
+        onButtons.Invoke();
     }
 
     public void OnCharacter3()
@@ -47,6 +57,7 @@ public class ButtonController : MonoBehaviour
             player2 = 3;
             SceneManager.LoadScene("ChooseWeapons");
         }
+        onButtons.Invoke();
     }
 
     public void OnCharacter4()
@@ -60,16 +71,19 @@ public class ButtonController : MonoBehaviour
             player2 = 4;
             SceneManager.LoadScene("ChooseWeapons");
         }
+        onButtons.Invoke();
     }
 
     public void OnPlay()
     {
         SceneManager.LoadScene("ChooseCharacter");
+        onButtons.Invoke();
     }
 
     public void OnPause()
     {
         Pause.instance.TogglePause();
+        onButtons.Invoke();
     }
 
     public void OnRestart()
@@ -77,11 +91,13 @@ public class ButtonController : MonoBehaviour
         player1 = 0; player2 = 0;
         SceneManager.LoadScene("ChooseCharacter");
         Time.timeScale = 1;
+        onButtons.Invoke();
     }
 
     public void OnExit()
     {
         Application.Quit();
+        onButtons.Invoke();
     }
     public void OnMachineGun()
     {
@@ -92,6 +108,7 @@ public class ButtonController : MonoBehaviour
             weaponType2 = 1;
             SceneManager.LoadScene("Level1");
         }
+        onButtons.Invoke();
     }
     public void OnShotGun()
     {
@@ -102,5 +119,6 @@ public class ButtonController : MonoBehaviour
             weaponType2 = 2;
             SceneManager.LoadScene("Level1");
         }
+        onButtons.Invoke();
     }
 }

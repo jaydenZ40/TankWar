@@ -18,12 +18,15 @@ public class Player2Controller : MonoBehaviour
     public UnityEvent onRescuedPlayer1 = new UnityEvent();  // save player1's life
     public UnityEvent onHealPlayer2 = new UnityEvent();
     public UnityEvent onShieldPlayer2 = new UnityEvent();
+    public UnityEvent onMachineGun = new UnityEvent();
+    public UnityEvent onShotGun = new UnityEvent();
     public bool isKnockedDown = false;
     public int damage = 1;
     public int powerupDamage = 2;
-    public float bulletMoveSpeed = 5;
+    //public float bulletMoveSpeed = 5;
     public TextMeshProUGUI rescueTime;
     public TextMeshProUGUI overheat;
+
 
     private Vector3 oldPosition = Vector3.zero;
     private float distanceToPlayer1;
@@ -73,15 +76,19 @@ public class Player2Controller : MonoBehaviour
         overheatBulletLimit = ButtonController.weaponType2 == 1 ? 10 : 5;
 
         if (Input.GetKeyDown(KeyCode.Keypad4) && !isKnockedDown && bulletNum < overheatBulletLimit)
-        {            
+        {
             //Debug.Log("1: " + ButtonController.weaponType1 + ", 2: " + ButtonController.weaponType2);
             if (ButtonController.weaponType2 != 2)
+            {
                 Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
+                onMachineGun.Invoke();
+            }
             else
             {
                 Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
                 Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.AxisAngle(new Vector3(0, 0, 1), 0.1f));
                 Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.AxisAngle(new Vector3(0, 0, 1), -0.1f));
+                onShotGun.Invoke();
             }
             bulletNum++;
         }

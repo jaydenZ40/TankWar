@@ -316,7 +316,7 @@ public class GameManager : MonoBehaviour
 
     public void RandomSpawnHealthOrShield(Vector3 pos)
     {
-        int i = Random.Range(0, 8);
+        int i = Random.Range(0, 10);
         Debug.Log(i);
         if (i == 5)
         {

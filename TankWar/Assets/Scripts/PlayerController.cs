@@ -18,10 +18,12 @@ public class PlayerController : MonoBehaviour
     public UnityEvent onRescuedPlayer2 = new UnityEvent();    // save player2's life
     public UnityEvent onHealPlayer1 = new UnityEvent();
     public UnityEvent onShieldPlayer1 = new UnityEvent();
+    public UnityEvent onMachineGun = new UnityEvent();
+    public UnityEvent onShotGun = new UnityEvent();
     public bool isKnockedDown = false;
     public int damage = 1;
     public int powerupDamage = 2;
-    public float bulletMoveSpeed = 5;
+    //public float bulletMoveSpeed = 5;
     public float distanceToPlayer2;
     public TextMeshProUGUI rescueTime;
     public TextMeshProUGUI overheat;
@@ -34,6 +36,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         instance = this;
+        AudioManager.instance.LevelStart();
     }
 
     void FixedUpdate()
@@ -75,12 +78,16 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.J) && !isKnockedDown && bulletNum < overheatBulletLimit)
         {
             if (ButtonController.weaponType1 != 2)
+            {
                 Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
+                onMachineGun.Invoke();
+            }
             else
             {
                 Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
                 Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.AxisAngle(new Vector3(0, 0, 1), 0.1f));
                 Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.AxisAngle(new Vector3(0, 0, 1), -0.1f));
+                onShotGun.Invoke();
             }
             bulletNum++;
         }
