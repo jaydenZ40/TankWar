@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ChooseWeapons.unity
     guid: c0c018ec3a6459f4b95f482bf854a529
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: 06a298fdcfee4be478f639a1113ee139
   m_configObjects: {}

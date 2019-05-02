@@ -75,7 +75,7 @@ public class Player2Controller : MonoBehaviour
     {
         overheatBulletLimit = ButtonController.weaponType2 == 1 ? 10 : 5;
 
-        if (Input.GetKeyDown(KeyCode.Keypad4) && !isKnockedDown && bulletNum < overheatBulletLimit)
+        if ((Input.GetKeyDown(KeyCode.Keypad4) || (Input.GetKeyDown(KeyCode.LeftBracket))) && !isKnockedDown && bulletNum < overheatBulletLimit)
         {
             //Debug.Log("1: " + ButtonController.weaponType1 + ", 2: " + ButtonController.weaponType2);
             if (ButtonController.weaponType2 != 2)
@@ -92,7 +92,7 @@ public class Player2Controller : MonoBehaviour
             }
             bulletNum++;
         }
-        if (Input.GetKeyDown(KeyCode.Keypad4) && !isKnockedDown && bulletNum == overheatBulletLimit)
+        if ((Input.GetKeyDown(KeyCode.Keypad4) || (Input.GetKeyDown(KeyCode.LeftBracket))) && !isKnockedDown && bulletNum == overheatBulletLimit)
         {
             bulletNum++;
             overheat.gameObject.SetActive(true);
@@ -104,7 +104,8 @@ public class Player2Controller : MonoBehaviour
         damage = distanceToPlayer1 <= 5 ? powerupDamage : damage;  // Power up when two player are close to each other
         bullet.GetComponent<SpriteRenderer>().color = distanceToPlayer1 <= 5 ? new Color(255, 0, 0) : new Color(255, 255, 255);
 
-        if (distanceToPlayer1 <= 1.5f && Input.GetKey(KeyCode.Keypad5) && PlayerController.instance.isKnockedDown)
+        if (distanceToPlayer1 <= 1.5f && (Input.GetKeyDown(KeyCode.Keypad5) || (Input.GetKeyDown(KeyCode.RightBracket)))
+            && PlayerController.instance.isKnockedDown)
         {
             timer += Time.deltaTime;
             rescueTime.gameObject.SetActive(true);
