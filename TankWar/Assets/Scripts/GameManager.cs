@@ -371,7 +371,7 @@ public class GameManager : MonoBehaviour
                 health1.text = "Health: 75";
                 PlayerController.instance.damage = 1;
                 PlayerController.instance.powerupDamage = 2;
-                PlayerController.instance.moveSpeed = 7;
+                PlayerController.instance.moveSpeed = 5;
                 break;
             case 4:
                 PlayerMaxHealth1 = 200;
@@ -379,7 +379,7 @@ public class GameManager : MonoBehaviour
                 health1.text = "Health: 200";
                 PlayerController.instance.damage = 1;
                 PlayerController.instance.powerupDamage = 2;
-                PlayerController.instance.moveSpeed = 1.5f;
+                PlayerController.instance.moveSpeed = 2f;
                 break;
         }
 
@@ -407,7 +407,7 @@ public class GameManager : MonoBehaviour
                 health2.text = "Health: 75";
                 Player2Controller.instance.damage = 1;
                 Player2Controller.instance.powerupDamage = 2;
-                Player2Controller.instance.moveSpeed = 7;
+                Player2Controller.instance.moveSpeed = 5;
                 break;
             case 4:
                 PlayerMaxHealth2 = 200;
@@ -416,7 +416,7 @@ public class GameManager : MonoBehaviour
                 Player2Controller.instance.damage = 1;
                 Player2Controller.instance.powerupDamage = 2;
                 //Bullet2.transform.localScale = new Vector3(0.2f, 0.2f, 0);
-                Player2Controller.instance.moveSpeed = 1.5f;
+                Player2Controller.instance.moveSpeed = 2f;
                 //Player2Controller.instance.bulletMoveSpeed = 5;
                 break;
         }

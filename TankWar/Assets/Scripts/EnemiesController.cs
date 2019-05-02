@@ -13,7 +13,7 @@ public class EnemiesController : MonoBehaviour
     public GameObject enemyBullet;
     public UnityEvent onShotEnemy = new UnityEvent();
     public int enemyHealth = 5;
-    public float enemyMoveSpeed = 0.5f;
+    public float enemyMoveSpeed = 3f;
 
     private float timer = 0;
     private float distanceToPlayer1;

@@ -132,7 +132,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   enemyHealth: 5
-  enemyMoveSpeed: 0.5
+  enemyMoveSpeed: 3
 --- !u!61 &5720720889310148725
 BoxCollider2D:
   m_ObjectHideFlags: 0
