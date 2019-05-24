@@ -12,18 +12,24 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI health2;
     public TextMeshProUGUI shield1;
     public TextMeshProUGUI shield2;
+    public TextMeshProUGUI rescueTime;
     public GameObject Enemy;
     public GameObject line;
     public GameObject Heal;
     public GameObject Shield;
     public GameObject Bullet;
     public GameObject Bullet2;
+    public Sprite tank1, tank2;
+    public GameObject player1, player2;
+    public Sprite tank1Down, tank2Down;
 
     private int waveNum = 1;
     [SerializeField] private int NumOfEnemiesLeft = 0;
     [SerializeField] private int NumOfEnemiesWillSpawn = 10;
     private int PlayerHealth1 = 100;
     private int PlayerHealth2 = 100;
+    private int PlayerMaxHealth1 = 100;
+    private int PlayerMaxHealth2 = 100;
     private int PlayerShield1 = 0;
     private int PlayerShield2 = 0;
     private float timer = 0;
@@ -55,6 +61,15 @@ public class GameManager : MonoBehaviour
         tmpColor = PlayerController.instance.GetComponent<SpriteRenderer>().color;
         tmpColor2 = Player2Controller.instance.GetComponent<SpriteRenderer>().color;
 
+        if (ButtonController.weaponType1 == 2)
+        {
+            player1.GetComponent<SpriteRenderer>().sprite = tank2;
+        }
+        if (ButtonController.weaponType2 == 2)
+        {
+            player2.GetComponent<SpriteRenderer>().sprite = tank2;
+        }
+
         //Debug.Log("P1:" + ButtonController.player1 + ", P2:" + ButtonController.player2);
     }
 
@@ -62,7 +77,7 @@ public class GameManager : MonoBehaviour
     {
         SpawnEnemies();
 
-        NextWave(); // Generate heal and shield after each wave, add difficulty;
+        NextWave();
 
         CheckWin();
 
@@ -71,7 +86,6 @@ public class GameManager : MonoBehaviour
 
     void SpawnEnemies()
     {
-
         timer += Time.deltaTime;
         if (timer > Random.Range(2, 10) && NumOfEnemiesWillSpawn > 0)   // spawn enemies
         {
@@ -89,9 +103,6 @@ public class GameManager : MonoBehaviour
             waveNum++;
             waveText.text = "Wave: " + waveNum;
             NumOfEnemiesWillSpawn += 10 + (waveNum - 1) * 5;
-
-            Instantiate(Heal, new Vector3(Random.Range(-9, 9), Random.Range(-5, 5), 0), Quaternion.identity);
-            Instantiate(Shield, new Vector3(Random.Range(-9, 9), Random.Range(-5, 5), 0), Quaternion.identity);
 
             EnemiesController.instance.enemyMoveSpeed += 0.3f;
         }
@@ -133,7 +144,7 @@ public class GameManager : MonoBehaviour
 
     void Player1CollidesEnemy()
     {
-        PlayerShield1 -= 50;
+        PlayerShield1 -= 25;
         if (PlayerShield1 < 0)
         {
             PlayerHealth1 += PlayerShield1;
@@ -146,6 +157,11 @@ public class GameManager : MonoBehaviour
             PlayerController.instance.isKnockedDown = true;
             PlayerController.instance.moveSpeed = 1;
             CheckGameover();
+            if (ButtonController.weaponType1 == 1)
+            {
+                player1.GetComponent<SpriteRenderer>().sprite = tank1Down;
+            }
+            else player1.GetComponent<SpriteRenderer>().sprite = tank2Down;
         }
         health1.text = "Health: " + PlayerHealth1;
         shield1.text = "Shield: " + PlayerShield1;
@@ -165,6 +181,12 @@ public class GameManager : MonoBehaviour
             PlayerController.instance.isKnockedDown = true;
             PlayerController.instance.moveSpeed = 1;
             CheckGameover();
+
+            if (ButtonController.weaponType1 == 1)
+            {
+                player1.GetComponent<SpriteRenderer>().sprite = tank1Down;
+            }
+            else player1.GetComponent<SpriteRenderer>().sprite = tank2Down;
         }
         health1.text = "Health: " + PlayerHealth1;
         shield1.text = "Shield: " + PlayerShield1;
@@ -172,7 +194,7 @@ public class GameManager : MonoBehaviour
 
     void Player2CollidesEnemy()
     {
-        PlayerShield2 -= 50;
+        PlayerShield2 -= 25;
         if (PlayerShield2 < 0)
         {
             PlayerHealth2 += PlayerShield2;
@@ -185,6 +207,11 @@ public class GameManager : MonoBehaviour
             Player2Controller.instance.isKnockedDown = true;
             Player2Controller.instance.moveSpeed = 1;
             CheckGameover();
+            if (ButtonController.weaponType2 == 1)
+            {
+                player2.GetComponent<SpriteRenderer>().sprite = tank1Down;
+            }
+            else player2.GetComponent<SpriteRenderer>().sprite = tank2Down;
         }
         health2.text = "Health: " + PlayerHealth2;
         shield2.text = "Shield: " + PlayerShield2;
@@ -204,6 +231,11 @@ public class GameManager : MonoBehaviour
             Player2Controller.instance.isKnockedDown = true;
             Player2Controller.instance.moveSpeed = 1;
             CheckGameover();
+            if (ButtonController.weaponType2 == 1)
+            {
+                player2.GetComponent<SpriteRenderer>().sprite = tank1Down;
+            }
+            else player2.GetComponent<SpriteRenderer>().sprite = tank2Down;
         }
         health2.text = "Health: " + PlayerHealth2;
         shield2.text = "Shield: " + PlayerShield2;
@@ -227,7 +259,9 @@ public class GameManager : MonoBehaviour
         PlayerController.instance.isKnockedDown = false;
         PlayerController.instance.moveSpeed = 5;
         Invoke("SetColliderActive", 3); // invincible for 3 sec after being saved
-
+        if (ButtonController.weaponType1 == 1)
+            player1.GetComponent<SpriteRenderer>().sprite = tank1;
+        else player1.GetComponent<SpriteRenderer>().sprite = tank2;
     }
 
     void Player2Recover()
@@ -239,6 +273,9 @@ public class GameManager : MonoBehaviour
         Player2Controller.instance.isKnockedDown = false;
         Player2Controller.instance.moveSpeed = 5;
         Invoke("SetColliderActive", 3); // invincible for 3 sec after being saved
+        if (ButtonController.weaponType2 == 1)
+            player2.GetComponent<SpriteRenderer>().sprite = tank1;
+        else player2.GetComponent<SpriteRenderer>().sprite = tank2;
     }
 
     void SetColliderActive()
@@ -252,6 +289,8 @@ public class GameManager : MonoBehaviour
     void AddPlayer1Health()
     {
         PlayerHealth1 += 30;
+        if (PlayerHealth1 >= PlayerMaxHealth1)
+            PlayerHealth1 = PlayerMaxHealth1;
         health1.text = "Health: " + PlayerHealth1;
     }
 
@@ -264,6 +303,8 @@ public class GameManager : MonoBehaviour
     void AddPlayer2Health()
     {
         PlayerHealth2 += 30;
+        if (PlayerHealth1 >= PlayerMaxHealth2)
+            PlayerHealth1 = PlayerMaxHealth2;
         health2.text = "Health: " + PlayerHealth2;
     }
 
@@ -273,15 +314,26 @@ public class GameManager : MonoBehaviour
         shield2.text = "Shield: " + PlayerShield2;
     }
 
+    public void RandomSpawnHealthOrShield(Vector3 pos)
+    {
+        int i = Random.Range(0, 10);
+        Debug.Log(i);
+        if (i == 5)
+        {
+            if (Random.Range(0, 2) == 1)
+                Instantiate(Heal, pos, Quaternion.identity);
+            else Instantiate(Shield, pos, Quaternion.identity);
+        }
+    }
 
-    Vector3 GetEnemyRandomSpawnPosition()
+    Vector3 GetEnemyRandomSpawnPosition()   //  spwan outside the screen but should not be far from players
     {
         Vector3 randomPosition = Vector3.zero;
         float x= 0, y = 0;
-        while ((x > -10 && x < 10) && (y > -6 && y < 6))
+        while ((x > -19 && x < 19) && (y > -11 && y < 11))
         {
-            x = Random.Range(-15, 15);
-            y = Random.Range(-10, 10);
+            x = Random.Range(-24, 24);
+            y = Random.Range(-16, 16);
         }
         randomPosition.x = x;
         randomPosition.y = y;
@@ -298,80 +350,74 @@ public class GameManager : MonoBehaviour
         switch (ButtonController.player1)
         {
             case 1:
+                PlayerMaxHealth1 = 100;
                 PlayerHealth1 = 100;
                 health1.text = "Health: 100";
                 PlayerController.instance.damage = 1;
                 PlayerController.instance.powerupDamage = 2;
-                Bullet.transform.localScale = new Vector3(0.2f, 0.2f, 0);
                 PlayerController.instance.moveSpeed = 3;
-                PlayerController.instance.bulletMoveSpeed = 5;
                 break;
             case 2:
+                PlayerMaxHealth1 = 50;
                 PlayerHealth1 = 50;
                 health1.text = "Health: 50";
                 PlayerController.instance.damage = 2;
                 PlayerController.instance.powerupDamage = 3;
-                Bullet.transform.localScale = new Vector3(0.5f, 0.5f, 0);
                 PlayerController.instance.moveSpeed = 3;
-                PlayerController.instance.bulletMoveSpeed = 15;
                 break;
             case 3:
+                PlayerMaxHealth1 = 75;
                 PlayerHealth1 = 75;
                 health1.text = "Health: 75";
                 PlayerController.instance.damage = 1;
                 PlayerController.instance.powerupDamage = 2;
-                Bullet.transform.localScale = new Vector3(0.2f, 0.2f, 0);
-                PlayerController.instance.moveSpeed = 10;
-                PlayerController.instance.bulletMoveSpeed = 10;
+                PlayerController.instance.moveSpeed = 5;
                 break;
             case 4:
+                PlayerMaxHealth1 = 200;
                 PlayerHealth1 = 200;
                 health1.text = "Health: 200";
                 PlayerController.instance.damage = 1;
                 PlayerController.instance.powerupDamage = 2;
-                Bullet.transform.localScale = new Vector3(0.2f, 0.2f, 0);
-                PlayerController.instance.moveSpeed = 1.5f;
-                PlayerController.instance.bulletMoveSpeed = 5;
+                PlayerController.instance.moveSpeed = 2f;
                 break;
         }
 
         switch (ButtonController.player2)
         {
             case 1:
+                PlayerMaxHealth2 = 100;
                 PlayerHealth2 = 100;
                 health2.text = "Health: 100";
                 Player2Controller.instance.damage = 1;
                 Player2Controller.instance.powerupDamage = 2;
-                Bullet2.transform.localScale = new Vector3(0.2f, 0.2f, 0);
                 Player2Controller.instance.moveSpeed = 3;
-                Player2Controller.instance.bulletMoveSpeed = 5;
                 break;
             case 2:
+                PlayerMaxHealth2 = 50;
                 PlayerHealth2 = 50;
                 health2.text = "Health: 50";
                 Player2Controller.instance.damage = 2;
                 Player2Controller.instance.powerupDamage = 3;
-                Bullet2.transform.localScale = new Vector3(0.5f, 0.5f, 0);
                 Player2Controller.instance.moveSpeed = 3;
-                Player2Controller.instance.bulletMoveSpeed = 15;
                 break;
             case 3:
+                PlayerMaxHealth2 = 75;
                 PlayerHealth2 = 75;
                 health2.text = "Health: 75";
                 Player2Controller.instance.damage = 1;
                 Player2Controller.instance.powerupDamage = 2;
-                Bullet2.transform.localScale = new Vector3(0.2f, 0.2f, 0);
-                Player2Controller.instance.moveSpeed = 10;
-                Player2Controller.instance.bulletMoveSpeed = 10;
+                Player2Controller.instance.moveSpeed = 5;
                 break;
             case 4:
+                PlayerMaxHealth2 = 200;
                 PlayerHealth2 = 200;
                 health2.text = "Health: 200";
                 Player2Controller.instance.damage = 1;
                 Player2Controller.instance.powerupDamage = 2;
-                Bullet2.transform.localScale = new Vector3(0.2f, 0.2f, 0);
-                Player2Controller.instance.moveSpeed = 1.5f;
-                Player2Controller.instance.bulletMoveSpeed = 5;
+                //Bullet2.transform.localScale = new Vector3(0.2f, 0.2f, 0);
+                Player2Controller.instance.moveSpeed = 2f;
+                //Player2Controller.instance.bulletMoveSpeed = 5;
                 break;
         }
     }

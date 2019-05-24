@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -17,18 +18,25 @@ public class PlayerController : MonoBehaviour
     public UnityEvent onRescuedPlayer2 = new UnityEvent();    // save player2's life
     public UnityEvent onHealPlayer1 = new UnityEvent();
     public UnityEvent onShieldPlayer1 = new UnityEvent();
+    public UnityEvent onMachineGun = new UnityEvent();
+    public UnityEvent onShotGun = new UnityEvent();
     public bool isKnockedDown = false;
     public int damage = 1;
     public int powerupDamage = 2;
-    public float bulletMoveSpeed = 5;
+    //public float bulletMoveSpeed = 5;
     public float distanceToPlayer2;
+    public TextMeshProUGUI rescueTime;
+    public TextMeshProUGUI overheat;
 
     private Vector3 oldPosition = Vector3.zero;
     private float timer = 0;
+    private int bulletNum = 0;
+    private int overheatBulletLimit = 10;
 
     void Awake()
     {
         instance = this;
+        AudioManager.instance.LevelStart();
     }
 
     void FixedUpdate()
@@ -49,13 +57,14 @@ public class PlayerController : MonoBehaviour
         {
             rb.transform.position += Vector3.down * moveSpeed * Time.deltaTime;
         }
-        moveDirection = rb.transform.position - oldPosition;
-        oldPosition = rb.transform.position;
+       
         if (moveDirection != Vector3.zero)
         {
             float angle = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }
+        moveDirection = rb.transform.position - oldPosition;
+        oldPosition = rb.transform.position;
 
         if (moveDirection != Vector3.zero)
         {
@@ -64,30 +73,59 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J) && !isKnockedDown)
+        overheatBulletLimit = ButtonController.weaponType1 == 1 ? 10 : 5;
+
+        if (Input.GetKeyDown(KeyCode.J) && !isKnockedDown && bulletNum < overheatBulletLimit)
         {
-            Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
+            if (ButtonController.weaponType1 != 2)
+            {
+                Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
+                onMachineGun.Invoke();
+            }
+            else
+            {
+                Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.identity);
+                Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.AxisAngle(new Vector3(0, 0, 1), 0.1f));
+                Instantiate(bullet, rb.transform.position + moveDirection.normalized / 1.5f, Quaternion.AxisAngle(new Vector3(0, 0, 1), -0.1f));
+                onShotGun.Invoke();
+            }
+            bulletNum++;
+        }
+        if (Input.GetKeyDown(KeyCode.J) && !isKnockedDown && bulletNum == overheatBulletLimit)
+        {
+            bulletNum++;
+            overheat.gameObject.SetActive(true);
+            Invoke("ShotReady", 3);
         }
 
         distanceToPlayer2 = (rb.transform.position - Player2Controller.instance.transform.position).magnitude;
 
         damage = distanceToPlayer2 <= 5 ? powerupDamage : damage;  // Power up when two player are close to each other
+        bullet.GetComponent<SpriteRenderer>().color = distanceToPlayer2 <= 5 ? new Color(255, 0, 0) : new Color(255, 255, 255);
 
         if (distanceToPlayer2 <= 1.5f && Input.GetKey(KeyCode.K) && Player2Controller.instance.isKnockedDown)
         {
             timer += Time.deltaTime;
-            if (timer >= 5)
+            rescueTime.gameObject.SetActive(true);
+            rescueTime.text = (3 - (int)timer) + "sec";
+            Debug.Log("Timer: " + timer + ", distance: " + distanceToPlayer2);
+            if (timer >= 3)
             {
                 onRescuedPlayer2.Invoke();
                 timer = 0;
+                rescueTime.gameObject.SetActive(false);
             }
-            Debug.Log("Timer: " + timer + ", distance: " + distanceToPlayer2);
         }
 
         //if (Input.GetKeyUp(KeyCode.K) || distanceToPlayer2 > 1.5f)    // need to hold the key until another player is recovered??
         //{
         //    timer = 0;
         //}
+    }
+    void ShotReady()
+    {
+        bulletNum = 0;
+        overheat.gameObject.SetActive(false);
     }
 
     private void OnCollisionEnter2D(Collision2D other)

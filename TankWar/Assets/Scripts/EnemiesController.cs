@@ -13,14 +13,14 @@ public class EnemiesController : MonoBehaviour
     public GameObject enemyBullet;
     public UnityEvent onShotEnemy = new UnityEvent();
     public int enemyHealth = 5;
-    public float enemyMoveSpeed = 0.5f;
+    public float enemyMoveSpeed = 3f;
 
     private float timer = 0;
     private float distanceToPlayer1;
     private float distanceToPlayer2;
     private Rigidbody2D rb;
 
-    private void Awake()
+    void Awake()
     {
         instance = this;
         rb = transform.GetComponent<Rigidbody2D>();
@@ -55,8 +55,8 @@ public class EnemiesController : MonoBehaviour
             {
                 Destroy(this.gameObject);
                 GameManager.instance.DecNumOfEnemiesLeft();
+                GameManager.instance.RandomSpawnHealthOrShield(transform.position);
             }
-            onShotEnemy.Invoke();
         }
 
         if (other.transform.CompareTag("Bullet2"))
@@ -67,8 +67,8 @@ public class EnemiesController : MonoBehaviour
             {
                 Destroy(this.gameObject);
                 GameManager.instance.DecNumOfEnemiesLeft();
+                GameManager.instance.RandomSpawnHealthOrShield(transform.position);
             }
-            onShotEnemy.Invoke();
         }
     }
 }
